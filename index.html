@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html ng-app="redditClone">
+  <head>
+    <meta charset="utf-8">
+    <title>Totally Not Reddit</title>
+    <link rel="stylesheet" href="https://bootswatch.com/journal/bootstrap.min.css" charset="utf-8">
+    <link rel="stylesheet" href="main.css" charset="utf-8">
+  </head>
+  <body>
+    <div class="modal fade" id="addPostModal" tabindex="-1" role="dialog" aria-labelledby="addPost">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content" ng-controller="SubmitPost">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Add a Post</h4>
+          </div><!-- end header -->
+          <div class="modal-body">
+            <form class="form-horizontal css-form">
+
+              <div class="form-group">
+                <label for="newPostTitle" class="col-sm-2 control-label">Title</label>
+                <div class="col-sm-10">
+                  <input type="text" ng-model="title" class="form-control" id="newPostTitle" placeholder="Title">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="newPostAuthor" class="col-sm-2 control-label">Author</label>
+                <div class="col-sm-10">
+                  <input type="text" ng-model="author" class="form-control" id="newPostAuthor" placeholder="Author">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="newPostUrl" class="col-sm-2 control-label">
+                  <a data-toggle="tooltip" title="Please use a direct image URL.">Image</a>
+                </label>
+                <div class="col-sm-10">
+                  <input type="url" ng-model="img" class="form-control" id="newPostUrl" placeholder="Enter an image URL.">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="newPostDesc" class="col-sm-2 control-label">Description</label>
+                <div class="col-sm-10">
+                  <textarea ng-model="desc" id="newPostDesc" class="form-control" rows="4"></textarea>
+                </div>
+              </div>
+
+            </form>
+          </div><!-- end body -->
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" ng-click="submitPost()" class="btn btn-primary">Submit</button>
+          </div>
+        </div>
+      </div>
+    </div><!-- close modal -->
+
+    <!-- navbar -->
+    <nav class="navbar navbar-default" ng-controller="NavBar">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav-main">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">nottit</a>
+        </div><!-- end nav-header -->
+
+        <div class="collapse navbar-collapse" id="nav-main">
+          <form class="navbar-form navbar-left" role="search">
+            <div class="form-group">
+              <div class="input-group">
+                <input type="text" class="form-control" placeholder="Search" id="searchBar" ng-model="navSearch.query">
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-primary">
+                    <span class="glyphicon glyphicon-search"></span>
+                  </button>
+                </span>
+              </div>
+            </div>
+          </form>
+          <ul class="nav navbar-nav navbar-right">
+            <li>
+              <a data-toggle="modal" data-target="#addPostModal">
+                <span class="glyphicon glyphicon-pencil"></span>Add a Post
+              </a>
+            </li>
+            <li>
+              <p class="navbar-text">Sort by:</p>
+            </li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">{{sortString}}</a>
+              <ul class="dropdown-menu">
+                <li><a href="#" ng-click="setSort('Votes')">Votes</a></li>
+                <li><a href="#" ng-click="setSort('Date')">Date</a></li>
+                <li><a href="#" ng-click="setSort('Title')">Title</a></li>
+              </ul>
+            </li>
+            <li>
+              <div class="btn-group-vertical" role="group">
+                <button type="button" class="btn btn-xs btn-primary" ng-click="setSortMode(false)">
+                  <span class="glyphicon glyphicon-circle-arrow-up"></span>
+                </button>
+                <button type="button" class="btn btn-xs btn-primary" ng-click="setSortMode(true)">
+                  <span class="glyphicon glyphicon-circle-arrow-down"></span>
+                </button>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container animate-container" ng-controller="AllPosts">
+
+      <div class="row flip-in" ng-repeat="post in posts | filter:navSearch.query | orderBy:navSearch.sort:navSearch.sortMode">
+        <div class="col-xs-10 col-xs-offset-1">
+          <div class="panel panel-primary" ng-controller="SinglePost">
+            <div class="panel-body">
+              <div class="media">
+                <div class="media-left media-middle">
+                  <a href="#">
+                    <img class="media-object img-thumbnail img-post" src={{post.imgUrl}} alt="...">
+                  </a>
+                </div>
+                <div class="media-body">
+                  <h4 class="media-heading">
+                    <span ng-class="{'votes-pos': post.votes > 0, 'votes-neg': post.votes < 0}">
+                      {{ post.votes }}
+                    </span>
+                    <span ng-click="upvote()" class="glyphicon glyphicon-triangle-top"></span>
+                    <span ng-click="downvote()" class="glyphicon glyphicon-triangle-bottom"></span>
+                    {{ post.title }}
+                    <small class="pull-right" am-time-ago="post.date"></small>
+                    <small><br>{{ post.author }}</small>
+                  </h4>
+                  <p>
+                    {{ post.desc }}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="panel-footer">
+              <a class="label label-primary" data-toggle="collapse" data-target="#{{post.date.getTime()}}">
+                <span class="glyphicon glyphicon-comment"></span>
+                <ng-pluralize count="post.comments.length"
+                              when="{'0': 'No Comments',
+                                     'one': '1 Comment',
+                                     'other': '{} Comments'}">
+                </ng-pluralize>
+              </a>
+              <div class="collapse clearfix" id="{{post.date.getTime()}}">
+                <input type="text" ng-model="posts.user" placeholder="Username" class="form-control comment-reply" required>
+                <textarea class="form-control comment-reply" rows="4" ng-model="newCommentText" required></textarea>
+                <button type="button" ng-click="addComment()" class="btn btn-default btn-xs comment-reply">Reply</button>
+                <ul class="list-group">
+                  <li class="list-group-item" ng-repeat="comment in post.comments">
+                    <h5 class="list-group-item-heading">
+                      {{comment.user}}
+                      <small am-time-ago="comment.timestamp" class="pull-right"></small>
+                    </h5>
+                    <p class="list-group-item-text">{{comment.text}}</p>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.4/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.5/angular-animate.min.js" charset="utf-8"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js" charset="utf-8"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-moment/1.0.0-beta.1/angular-moment.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="app.js" charset="utf-8"></script>
+    <script type="text/javascript">
+      $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+      })
+    </script>
+  </body>
+</html>
