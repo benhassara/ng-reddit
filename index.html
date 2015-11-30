@@ -135,7 +135,7 @@
                     <span ng-click="upvote()" class="glyphicon glyphicon-triangle-top"></span>
                     <span ng-click="downvote()" class="glyphicon glyphicon-triangle-bottom"></span>
                     {{ post.title }}
-                    <small class="pull-right" am-time-ago="post.date"></small>
+                    <small class="pull-right" am-time-ago="post.date" title="{{post.date.format('dddd, MMMM Do YYYY, h:mm a')}}"></small>
                     <small><br>{{ post.author }}</small>
                   </h4>
                   <p>
