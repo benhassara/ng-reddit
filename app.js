@@ -146,5 +146,5 @@ function Post(obj) {
   // additional functionality
   this.comments = [];
   this.votes = 0;
-  this.date = new Date(obj.date) || new Date();
+  this.date = moment(obj.date) || moment();
 }
