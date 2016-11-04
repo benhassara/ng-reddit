@@ -9,21 +9,21 @@ angular.module('redditClone', ['ngAnimate', 'angularMoment'])
       author: 'ClintonFan4Lyfe',
       img: 'http://i.imgur.com/kETTPXr.jpg',
       desc: 'This is a picture of Big Willy Style with some delicious ice cream.',
-      date: 'September 10, 2015 12:10:30'
+      date: 'September 10, 2016 12:10:30'
     }),
     new Post({
       title: 'Another Title',
       author: 'Carl',
       img: 'http://i.imgur.com/mpEbtMb.jpg',
       desc: 'Look at him. What an adorable old dude.',
-      date: 'September 1, 2015 14:45:20'
+      date: 'November 1, 2016 14:45:20'
     }),
     new Post({
       title: 'Come on in to Titles, Titles, Titles',
       author: 'HashtagMemesCatsBacon',
       img: 'http://i.imgur.com/KRxgsMQ.jpg',
       desc: 'Florida Man is at it again!',
-      date: 'September 14, 2015 10:12:52'
+      date: 'October 14, 2016 10:12:52'
     })
   ];
 
